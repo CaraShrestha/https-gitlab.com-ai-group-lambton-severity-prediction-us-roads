@@ -10,3 +10,5 @@ git push origin <branch>
 git fetch origin
 # Sirve para integrar los cambios que estan en cloud a repositorio local
 git pull origin <branch>
+
+## No me gustan tus comentarios
