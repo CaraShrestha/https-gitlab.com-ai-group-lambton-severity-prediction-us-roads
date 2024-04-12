@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
+# Define the path to the prediction history CSV file
+PREDICTION_HISTORY_FILE = '../History/prediction_history.csv'
 # Preprocessing function for one-hot encoding categorical variables
 def choose_model(option):
     random_forest_estimator_5 = joblib.load('../Dataset/random_forest_model_dump.joblib')
@@ -38,14 +41,20 @@ def preprocess_input(df):
 
     return df_encoded
 
-# Check if DataFrame is empty before making predictions
-def predict_severity(model, df_encoded):
-    if not df_encoded.empty:
-        predictions = model.predict(df_encoded)
-        return predictions
+def save_prediction_to_history(data, prediction):
+    # Create or append to the prediction history CSV file
+    if not os.path.exists(PREDICTION_HISTORY_FILE):
+        df = pd.DataFrame(columns=['Date and Time', 'Location', 'Actual Severity', 'Predicted Severity'])
+        df.to_csv(PREDICTION_HISTORY_FILE, index=False)
+    # Append the new prediction(s) to the CSV file
+    columns_to_select = ['Start_Date', 'End_Date']  # Specify the columns to select
+    selected_columns = [data[col].iloc[0] for col in columns_to_select]  # Select the specified columns
+    selected_columns.append(prediction)  # Append the prediction column
+    if len(selected_columns) == 3:  # Ensure the correct number of columns
+        with open(PREDICTION_HISTORY_FILE, 'a') as file:
+            file.write(','.join(map(str, selected_columns)) + '\n')
     else:
-        st.write("Data is empty")
-        return None
+        print("Error: Incorrect number of columns selected.")
 
 
 def display_prediction_form():
@@ -165,4 +174,4 @@ def display_prediction_form():
         # Make predictions
         model= choose_model(option)
         predictions = model.predict(df_encoded)
-        return predictions[0]
+        return predictions[0], df  # Returning both predictions[0] and df_encoded
