@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 def display_probability_distribution(probabilities):
     st.title('Probability Distribution')
     x = np.arange(len(probabilities))
-
     fig, ax = plt.subplots()
     ax.bar(x, probabilities)
     ax.set_xlabel('Categories')

@@ -10,7 +10,7 @@ def display_home():
 
     # Prediction Form
     with col1:
-        display_prediction_form()
+        prediction = display_prediction_form()
     with col2:
         probabilities = [0.1, 0.2, 0.3, 0.4]  # Example probabilities
         display_probability_distribution(probabilities)
@@ -20,4 +20,7 @@ def display_home():
             ['2021-01-03 05:00 PM', 'City 3', 'Medium', 'Medium', 'Correct']
         ]
         display_prediction_history(prediction_history)
+        if (prediction) in [1,2,3,4]:
+            st.write("Predicted Severity Level:")
+            st.write(prediction)
     display_reports()
